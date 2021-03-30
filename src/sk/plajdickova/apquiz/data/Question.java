@@ -3,15 +3,16 @@ package sk.plajdickova.apquiz.data;
 public class Question {
     public int id;
     public String text;
-    public int answerId;
+    public String category;
 
     public Question() {
     }
 
-    public Question(int id, String text, int answerId) {
+    public Question(int id, String text, String category) {
         this.id = id;
         this.text = text;
-        this.answerId = answerId;
+        this.category = category;
+
     }
 
 }
