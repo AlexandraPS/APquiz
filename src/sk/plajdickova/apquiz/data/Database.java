@@ -6,10 +6,16 @@ import java.util.ArrayList;
 public class Database {
 
     private Connection c;
+    private static Database instance; //singleton (vytvorenie len jednej instancie)
 
-    public Database() {
+    private  Database() {
     }
-
+    public static Database getInstance() {
+        if(instance == null) {
+            instance = new Database();
+        }
+        return instance;
+    }
     public boolean connect() {
         try {
             c = DriverManager.getConnection("jdbc:sqlite:apquiz.db");
