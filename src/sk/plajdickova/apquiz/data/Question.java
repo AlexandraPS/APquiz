@@ -14,5 +14,9 @@ public class Question {
         this.category = category;
 
     }
+    public Question(String text, String category) {
+        this.text = text;
+        this.category = category;
+    }
 
 }

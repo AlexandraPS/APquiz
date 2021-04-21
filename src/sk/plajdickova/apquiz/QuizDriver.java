@@ -5,6 +5,7 @@ import sk.plajdickova.apquiz.ui.QuizGui;
 public class QuizDriver {
     public static void main(String[] args) {
 
-        new QuizGui();
+        new QuizController(new QuizGui());
+
     }
 }
