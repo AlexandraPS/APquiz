@@ -32,6 +32,7 @@ public class Database {
 
     public boolean addQuestion(Question q) {
         try {
+            if(c == null) return false;
             PreparedStatement p = c.prepareStatement("INSERT INTO questions (text, category) VALUES(?,?);");
             //pripravny prikaz, id vygeneruje sql samo, nasledne nastavime hodnoty otaznikov:
             p.setString(1, q.text);
@@ -48,6 +49,7 @@ public class Database {
 
     public ArrayList<Question> getQuestions() {
         try {
+            if(c == null) return null;
             Statement statement = c.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM questions");
             //bodkociarku doplni statement, Query davame ked chceme dopytovat z databazy
@@ -70,6 +72,7 @@ public class Database {
     }
     public boolean addAnswer(Answer a) {
         try {
+            if(c == null) return false;
             PreparedStatement p = c.prepareStatement("INSERT INTO answers (text, questionId, isCorrect) VALUES(?,?,?);");
             //pripravny prikaz, id vygeneruje sql samo, nasledne nastavime hodnoty otaznikov:
             p.setString(1, a.text);
@@ -86,6 +89,7 @@ public class Database {
     }
     public ArrayList<Answer> getAnswers() {
         try {
+            if(c == null) return null;
             Statement statement = c.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM answers");
             //bodkociarku doplni statement, Query davame ked chceme dopytovat z databazy
