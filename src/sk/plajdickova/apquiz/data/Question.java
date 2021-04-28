@@ -8,15 +8,13 @@ public class Question {
     public Question() {
     }
 
-    public Question(int id, String text, String category) {
-        this.id = id;
-        this.text = text;
-        this.category = category;
-
-    }
     public Question(String text, String category) {
         this.text = text;
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return id + " " + text + " " + category;
+    }
 }

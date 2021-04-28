@@ -10,12 +10,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import static sk.plajdickova.apquiz.QuizController.ANSWERS_MAX;
+
 public class QuizGui extends JFrame {
     public void setController(QuizController controller) {
         this.controller = controller;
     }
 
     private QuizController controller;
+
 
     public QuizGui() {
 
@@ -73,9 +76,9 @@ public class QuizGui extends JFrame {
 
     private void showNewQuestionDialog() {
         JDialog dialog = new JDialog();
-        dialog.setSize(200, 200);
+        dialog.setSize(400, 500);
         dialog.setLocationRelativeTo(this);
-        dialog.setLayout(new GridLayout(5, 1));
+        dialog.setLayout(new GridLayout(10, 1));
         JLabel l1 = new JLabel("Zadaj otázku");
         l1.setHorizontalAlignment(JLabel.CENTER);
         dialog.add(l1);
@@ -84,12 +87,36 @@ public class QuizGui extends JFrame {
         JLabel l2 = new JLabel("Zadaj kategóriu");
         l2.setHorizontalAlignment(JLabel.CENTER);
         dialog.add(l2);
-        String [] categories = {"SJL","MAT","PRV"};
+        String[] categories = {"SJL", "MAT", "PRV"};
         JComboBox<String> comboBoxCategory = new JComboBox<>(categories);
         dialog.add(comboBoxCategory);
+        JLabel l3 = new JLabel("Zadaj odpoveď");
+        l3.setHorizontalAlignment(JLabel.CENTER);
+        dialog.add(l3);
+        JTextField[] answerFields = new JTextField[ANSWERS_MAX];
+        JCheckBox[] answerBoxes = new JCheckBox[ANSWERS_MAX];
+        for (int i = 0; i < ANSWERS_MAX; i++) {
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            answerFields[i] = new JTextField();
+            panel.add(answerFields[i], BorderLayout.CENTER);
+            answerBoxes[i] = new JCheckBox();
+            panel.add(answerBoxes[i], BorderLayout.EAST);
+            dialog.add(panel);
+        }
+
+
         JButton buttonAdd = new JButton("Ulož");
         buttonAdd.addActionListener(e -> {
-            boolean ok = controller.addQuestion(fieldQuestion.getText(), (String) comboBoxCategory.getSelectedItem());
+            String[] answers = new String[ANSWERS_MAX];
+            boolean[] correct = new boolean[ANSWERS_MAX];
+            for (int i = 0; i < ANSWERS_MAX; i++) {
+                answers[i] = answerFields[i].getText();
+                correct[i] = answerBoxes[i].isSelected();
+
+            }
+            boolean ok = controller.addQuestion(fieldQuestion.getText(),
+                    (String) comboBoxCategory.getSelectedItem(),answers,correct);
             dialog.dispose();
             if (ok) JOptionPane.showMessageDialog(this, "Otázka bola pridaná");
             else JOptionPane.showMessageDialog(this, "Otázka nebola pridaná");
@@ -104,6 +131,10 @@ public class QuizGui extends JFrame {
         if (ok) {
             JOptionPane.showMessageDialog(this, "Prihlásenie bolo úspešné");
         } else JOptionPane.showMessageDialog(this, "Zadali ste zlé heslo");
+    }
+
+    public void showConnectionError() {
+        JOptionPane.showMessageDialog(this, "Nepodarilo sa pripojiť k databáze");
     }
 
 }

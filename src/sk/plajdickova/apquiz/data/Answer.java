@@ -9,11 +9,14 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(int id, String text, int questionId,boolean isCorrect) {
-        this.id = id;
+    public Answer(String text, int questionId, boolean isCorrect) {
         this.text = text;
         this.questionId = questionId;
         this.isCorrect = isCorrect;
     }
 
+    @Override
+    public String toString() {
+        return id + " " + text + " " + questionId + " " + isCorrect;
+    }
 }
