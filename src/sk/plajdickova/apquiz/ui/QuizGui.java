@@ -1,14 +1,14 @@
 package sk.plajdickova.apquiz.ui;
 
 import sk.plajdickova.apquiz.QuizController;
-import sk.plajdickova.apquiz.data.Database;
 import sk.plajdickova.apquiz.data.Question;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static sk.plajdickova.apquiz.QuizController.ANSWERS_MAX;
 
@@ -42,6 +42,10 @@ public class QuizGui extends JFrame {
         setVisible(true);
     }
 
+    public void showNoAdmin() {
+        JOptionPane.showMessageDialog(this, "Admin nieje prihlásený");
+    }
+
     private void setupMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuAdmin = new JMenu("Admin");
@@ -49,6 +53,7 @@ public class QuizGui extends JFrame {
         itemLogin.addActionListener(e -> showLogin());
 
         menuAdmin.add(itemLogin);
+        //pridanie kolonky "Pridaj otazku" do menu
         JMenuItem itemQuestions = new JMenuItem("Pridaj otázku");
         itemQuestions.addActionListener(e -> {
             if (controller.getIsAdmin()) {
@@ -56,6 +61,12 @@ public class QuizGui extends JFrame {
             } else JOptionPane.showMessageDialog(this, "Admin nieje prihlásený");
         });
         menuAdmin.add(itemQuestions);
+        //pridanie kolonky "Pridaj test" do menu
+        JMenuItem itemNewTest = new JMenuItem("Pridaj test");
+        itemNewTest.addActionListener(e -> {
+            controller.tryToShowNewTestDialog();
+        });
+        menuAdmin.add(itemNewTest);
         menuBar.add(menuAdmin);
         setJMenuBar(menuBar);
     }
@@ -116,7 +127,7 @@ public class QuizGui extends JFrame {
 
             }
             boolean ok = controller.addQuestion(fieldQuestion.getText(),
-                    (String) comboBoxCategory.getSelectedItem(),answers,correct);
+                    (String) comboBoxCategory.getSelectedItem(), answers, correct);
             dialog.dispose();
             if (ok) JOptionPane.showMessageDialog(this, "Otázka bola pridaná");
             else JOptionPane.showMessageDialog(this, "Otázka nebola pridaná");
@@ -135,6 +146,64 @@ public class QuizGui extends JFrame {
 
     public void showConnectionError() {
         JOptionPane.showMessageDialog(this, "Nepodarilo sa pripojiť k databáze");
+    }
+
+    public void showNewTestDialog(ArrayList<Question> questions) {
+        JDialog dialog = new JDialog();
+        dialog.setSize(400, 500);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+        dialog.setTitle("Vytváranie nového testu");
+
+        JTextField fieldTitle = new JTextField();
+        dialog.add(fieldTitle, BorderLayout.NORTH);
+
+
+        DefaultListModel<QuestionListItem> listModel = new DefaultListModel<>();
+        for (Question q : questions) {
+            listModel.addElement(new QuestionListItem(q));
+        }
+        HashSet<Question> selectedQuestions = new HashSet<>();
+        JList<QuestionListItem> questionsList = new JList<>(listModel);
+        questionsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        questionsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int index = questionsList.locationToIndex(e.getPoint());
+                QuestionListItem item = listModel.getElementAt(index);
+                item.isSelected = !item.isSelected;
+                questionsList.repaint(questionsList.getCellBounds(index, index));
+                System.out.println(item);
+            }
+        });
+        questionsList.setCellRenderer(new CheckboxListCellRenderer() {
+            @Override
+            public void onQuestionSelected(QuestionListItem item) {
+                if (item.isSelected) selectedQuestions.add(item.q);
+                else selectedQuestions.remove(item.q);
+                //System.out.println(q + " " + isSelected);
+            }
+        });
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setViewportView(questionsList);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+
+        JButton buttonAdd = new JButton("Ulož");
+        buttonAdd.addActionListener(e -> {
+            controller.addTest(fieldTitle.getText(), new ArrayList<>()); //TODO: dokoncit
+        });
+        dialog.add(buttonAdd, BorderLayout.SOUTH);
+
+
+        dialog.setVisible(true);
+    }
+    public class QuestionListItem {
+        final Question q;
+        boolean isSelected = false;
+
+        private QuestionListItem(Question q) {
+            this.q = q;
+        }
     }
 
 }

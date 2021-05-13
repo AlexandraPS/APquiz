@@ -9,3 +9,5 @@ public class QuizDriver {
 
     }
 }
+//TODO: animácia
+//TODO: zvuk

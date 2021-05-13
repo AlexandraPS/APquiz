@@ -3,6 +3,7 @@ package sk.plajdickova.apquiz;
 import sk.plajdickova.apquiz.data.Answer;
 import sk.plajdickova.apquiz.data.Database;
 import sk.plajdickova.apquiz.data.Question;
+import sk.plajdickova.apquiz.data.Test;
 import sk.plajdickova.apquiz.ui.QuizGui;
 
 import java.util.ArrayList;
@@ -29,6 +30,10 @@ public class QuizController {
         for (Answer a: answers) {
             System.out.println(a);
         }
+        ArrayList<Test> tests = Database.getInstance().getTests();
+        for(Test t: tests) {
+            System.out.println(t);
+        }
     }
     public void login(String password) {
         isAdmin = password.equals(PASSWORD);
@@ -51,4 +56,15 @@ public class QuizController {
         return true;
     }
 
+    public void tryToShowNewTestDialog() {
+        if (isAdmin) ui.showNewTestDialog(Database.getInstance().getQuestions());
+        else ui.showNoAdmin();
+    }
+
+    public boolean addTest(String title, ArrayList <Question> questions) {
+        if(title.isBlank()) {
+            return false;
+        }
+        return Database.getInstance().addTest(new Test(title,questions)); //true co znamena ze sa vytvoril novy test, pridal do Db
+    }
 }
