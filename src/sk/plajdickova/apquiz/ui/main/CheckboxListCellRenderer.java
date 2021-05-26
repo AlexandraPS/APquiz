@@ -1,14 +1,14 @@
-package sk.plajdickova.apquiz.ui;
+package sk.plajdickova.apquiz.ui.main;
 
-import sk.plajdickova.apquiz.data.Question;
+import sk.plajdickova.apquiz.ui.main.QuizGui;
 
 import javax.swing.*;
 import java.awt.*;
 
-public  class CheckboxListCellRenderer extends JCheckBox implements ListCellRenderer<QuizGui.QuestionListItem>{
+public  class CheckboxListCellRenderer extends JCheckBox implements ListCellRenderer<QuestionListItem>{
 
 
-        public Component getListCellRendererComponent(JList list, QuizGui.QuestionListItem item, int index,
+        public Component getListCellRendererComponent(JList list, QuestionListItem item, int index,
                                                       boolean isSelected, boolean cellHasFocus) {
 
             setComponentOrientation(list.getComponentOrientation());

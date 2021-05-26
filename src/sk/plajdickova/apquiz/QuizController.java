@@ -4,7 +4,8 @@ import sk.plajdickova.apquiz.data.Answer;
 import sk.plajdickova.apquiz.data.Database;
 import sk.plajdickova.apquiz.data.Question;
 import sk.plajdickova.apquiz.data.Test;
-import sk.plajdickova.apquiz.ui.QuizGui;
+import sk.plajdickova.apquiz.ui.main.QuizGui;
+import sk.plajdickova.apquiz.ui.test.TestGui;
 
 import java.util.ArrayList;
 
@@ -75,6 +76,12 @@ public class QuizController {
             ui.showNoTests();
             return; // pokial mam za if return, nemusim davat else!!
         } ui.showTests(tests);
+    }
+
+    public void startTest(Test test) {
+        TestGui ui = new TestGui();
+        new TestController(ui, test);
+        this.ui.showTestGui(ui);
     }
 }
 // TODO: zobrazovanie testov,oprava testov

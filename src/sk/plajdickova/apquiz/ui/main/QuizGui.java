@@ -1,8 +1,9 @@
-package sk.plajdickova.apquiz.ui;
+package sk.plajdickova.apquiz.ui.main;
 
 import sk.plajdickova.apquiz.QuizController;
 import sk.plajdickova.apquiz.data.Question;
 import sk.plajdickova.apquiz.data.Test;
+import sk.plajdickova.apquiz.ui.test.TestGui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class QuizGui extends JFrame {
             System.out.println(q.id + " " + q.text + " " + q.category);
         }*/
         setTitle("APquiz");
-        setSize(900, 700);
+        setSize(700, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setupMenu();
@@ -233,7 +234,10 @@ public class QuizGui extends JFrame {
         });
         panel.add(left);
         JButton start = new JButton("START");
-        start.addActionListener(e -> {}); //TODO: dokoncit
+        start.addActionListener(e -> {
+            controller.startTest(tests.get(i));
+            dialog.dispose();
+        });
         panel.add(start);
         JButton right = new JButton(">");
         right.addActionListener(e -> {
@@ -250,13 +254,12 @@ public class QuizGui extends JFrame {
         dialog.setVisible(true);
     }
 
-    public class QuestionListItem {
-        final Question q;
-        boolean isSelected = false;
-
-        private QuestionListItem(Question q) {
-            this.q = q;
-        }
+    public void showTestGui(TestGui ui) {
+        getContentPane().removeAll();
+        add(ui);
+        validate();
     }
+
+
 
 }
