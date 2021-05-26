@@ -2,6 +2,7 @@ package sk.plajdickova.apquiz.ui;
 
 import sk.plajdickova.apquiz.QuizController;
 import sk.plajdickova.apquiz.data.Question;
+import sk.plajdickova.apquiz.data.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class QuizGui extends JFrame {
     }
 
     private QuizController controller;
+    private int i = 0;
 
 
     public QuizGui() {
@@ -63,11 +65,17 @@ public class QuizGui extends JFrame {
         menuAdmin.add(itemQuestions);
         //pridanie kolonky "Pridaj test" do menu
         JMenuItem itemNewTest = new JMenuItem("Pridaj test");
-        itemNewTest.addActionListener(e -> {
-            controller.tryToShowNewTestDialog();
-        });
+        itemNewTest.addActionListener(e ->
+            controller.tryToShowNewTestDialog());
         menuAdmin.add(itemNewTest);
         menuBar.add(menuAdmin);
+        JMenu menuStudent = new JMenu("Študent");
+        JMenuItem itemStartTest = new JMenuItem("Spusti test");
+        itemStartTest.addActionListener(e -> controller.startNewTest());
+        menuStudent.add(itemStartTest);
+        JMenuItem itemTestResults = new JMenuItem("Výsledky testov");
+        menuStudent.add(itemTestResults);
+        menuBar.add(menuStudent);
         setJMenuBar(menuBar);
     }
 
@@ -169,34 +177,79 @@ public class QuizGui extends JFrame {
         questionsList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 int index = questionsList.locationToIndex(e.getPoint());
                 QuestionListItem item = listModel.getElementAt(index);
                 item.isSelected = !item.isSelected;
+                if (item.isSelected) selectedQuestions.add(item.q);
+                else selectedQuestions.remove(item.q);
                 questionsList.repaint(questionsList.getCellBounds(index, index));
                 System.out.println(item);
             }
         });
-        questionsList.setCellRenderer(new CheckboxListCellRenderer() {
-            @Override
-            public void onQuestionSelected(QuestionListItem item) {
-                if (item.isSelected) selectedQuestions.add(item.q);
-                else selectedQuestions.remove(item.q);
-                //System.out.println(q + " " + isSelected);
-            }
-        });
+        questionsList.setCellRenderer(new CheckboxListCellRenderer());
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(questionsList);
         dialog.add(scrollPane, BorderLayout.CENTER);
 
         JButton buttonAdd = new JButton("Ulož");
         buttonAdd.addActionListener(e -> {
-            controller.addTest(fieldTitle.getText(), new ArrayList<>()); //TODO: dokoncit
+            String title = fieldTitle.getText();
+            if (title.isBlank()) {
+                JOptionPane.showMessageDialog(this,"Vyplnte názov testu.");
+                return;
+            }
+            controller.addTest(title, new ArrayList<>(selectedQuestions));
+            dialog.dispose();
         });
         dialog.add(buttonAdd, BorderLayout.SOUTH);
 
 
         dialog.setVisible(true);
     }
+
+    public void showNoTests() {
+        JOptionPane.showMessageDialog(this,"Nie sú dostupné žiadne testy");
+    }
+
+    public void showTests(ArrayList<Test> tests) {
+        JDialog dialog = new JDialog();
+        dialog.setSize(350,400);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+        i = 0;
+        JLabel label = new JLabel(tests.get(i).title + " " + (i + 1) + "/" + tests.size());
+        label.setHorizontalAlignment(JLabel.CENTER);
+        dialog.add(label, BorderLayout.NORTH);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(1,3));
+        JLabel label1 = new JLabel();
+        JButton left = new JButton("<");
+        left.addActionListener(e -> {
+            i--;
+            if (i == -1) i = tests.size() - 1;
+            label.setText(tests.get(i).title + " " + (i + 1) + "/" + tests.size());
+            label1.setText("<html>Počet otázok: " + tests.get(i).questions.size() + "<br>Kategórie: " + tests.get(i).getCategories() + "</html>");
+        });
+        panel.add(left);
+        JButton start = new JButton("START");
+        start.addActionListener(e -> {}); //TODO: dokoncit
+        panel.add(start);
+        JButton right = new JButton(">");
+        right.addActionListener(e -> {
+            i++;
+            if (i == tests.size()) i = 0;
+            label.setText(tests.get(i).title + " " + (i + 1) + "/" + tests.size());
+            label1.setText("<html>Počet otázok: " + tests.get(i).questions.size() + "<br>Kategórie: " + tests.get(i).getCategories() + "</html>");
+        });
+        panel.add(right);
+        dialog.add(panel,BorderLayout.SOUTH);
+
+        label1.setText("<html>Počet otázok: " + tests.get(i).questions.size() + "<br>Kategórie: " + tests.get(i).getCategories() + "</html>");
+        dialog.add(label1,BorderLayout.CENTER);
+        dialog.setVisible(true);
+    }
+
     public class QuestionListItem {
         final Question q;
         boolean isSelected = false;

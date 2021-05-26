@@ -22,18 +22,19 @@ public class QuizController {
             ui.showConnectionError();
             System.exit(-1);
         }
-        ArrayList <Question> questions = Database.getInstance().getQuestions();
+       /* ArrayList <Question> questions = Database.getInstance().getQuestions();
         for (Question q:questions) {
             System.out.println(q);
         }
         ArrayList <Answer> answers = Database.getInstance().getAnswers();
         for (Answer a: answers) {
             System.out.println(a);
-        }
+        } */
         ArrayList<Test> tests = Database.getInstance().getTests();
         for(Test t: tests) {
             System.out.println(t);
         }
+        //System.out.println(Database.getInstance().getQuestion(2));
     }
     public void login(String password) {
         isAdmin = password.equals(PASSWORD);
@@ -67,4 +68,13 @@ public class QuizController {
         }
         return Database.getInstance().addTest(new Test(title,questions)); //true co znamena ze sa vytvoril novy test, pridal do Db
     }
+
+    public void startNewTest() {
+        ArrayList <Test> tests = Database.getInstance().getTests();
+        if (tests.isEmpty()) {
+            ui.showNoTests();
+            return; // pokial mam za if return, nemusim davat else!!
+        } ui.showTests(tests);
+    }
 }
+// TODO: zobrazovanie testov,oprava testov

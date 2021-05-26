@@ -80,6 +80,28 @@ public class Database {
         }
     }
 
+    public Question getQuestion(int id) {
+        try {
+            if (c == null) return null;
+            PreparedStatement p = c.prepareStatement("SELECT * FROM questions WHERE id = ?;");
+            p.setInt(1, id);
+
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) {
+                Question q = new Question();
+                q.id = rs.getInt("id");
+                q.text = rs.getString("text");
+                q.category = rs.getString("category");
+                rs.close();
+                return q;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean addAnswer(Answer a) {
         try {
             if (c == null) return false;
@@ -125,6 +147,7 @@ public class Database {
 
     /**
      * pridáva test do databázy
+     *
      * @param t test, ktorý bude pridaný do databázy
      * @return true(v prípade úspešného vloženia do db)/ false (v prípade neúspešného vloženia do db)
      */
@@ -166,6 +189,32 @@ public class Database {
             return false;
         }
     }
+    public ArrayList<Question> getTestQuestions(int testId) {
+        try {
+            if (c == null) return null;
+            PreparedStatement p = c.prepareStatement("SELECT * FROM questions JOIN testQuestions ON " +
+                    "questions.id = testQuestions.questionId WHERE testQuestions.testId = ?;");
+
+            p.setInt(1, testId);
+            ResultSet rs = p.executeQuery();  //bodkociarku doplni statement, Query davame ked chceme dopytovat z databazy
+            ArrayList<Question> questions = new ArrayList<>();
+            while (rs.next()) {  //prechadza vysledkami dopytu a kazdy vysledok nacita do otazky
+                Question q = new Question();
+                q.id = rs.getInt("id");
+                q.text = rs.getString("text");
+                q.category = rs.getString("category");
+                questions.add(q); //otazku pridame do arraylistu
+            }
+            rs.close();
+
+            return questions;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+
+        }
+    }
+
 
     public ArrayList<Test> getTests() {
         try {
@@ -178,6 +227,7 @@ public class Database {
                 Test t = new Test();
                 t.id = rs.getInt("id");
                 t.title = rs.getString("title");
+                t.questions = getTestQuestions(t.id);
                 tests.add(t); //test pridame do arraylistu
             }
             rs.close();
