@@ -1,4 +1,6 @@
-package sk.plajdickova.apquiz.data;
+package sk.plajdickova.apquiz.data.entity;
+
+import sk.plajdickova.apquiz.data.entity.Question;
 
 import java.util.ArrayList;
 import java.util.HashSet;

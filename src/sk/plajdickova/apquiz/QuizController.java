@@ -1,26 +1,29 @@
 package sk.plajdickova.apquiz;
 
-import sk.plajdickova.apquiz.data.Answer;
-import sk.plajdickova.apquiz.data.Database;
-import sk.plajdickova.apquiz.data.Question;
-import sk.plajdickova.apquiz.data.Test;
-import sk.plajdickova.apquiz.ui.main.QuizGui;
-import sk.plajdickova.apquiz.ui.test.TestGui;
+import sk.plajdickova.apquiz.data.entity.Answer;
+import sk.plajdickova.apquiz.data.entity.Result;
+import sk.plajdickova.apquiz.data.repository.AnswerRepository;
+import sk.plajdickova.apquiz.data.repository.Database;
+import sk.plajdickova.apquiz.data.entity.Question;
+import sk.plajdickova.apquiz.data.entity.Test;
+import sk.plajdickova.apquiz.data.repository.QuestionRepository;
+import sk.plajdickova.apquiz.view.main.QuizView;
+import sk.plajdickova.apquiz.view.test.TestView;
 
 import java.util.ArrayList;
 
 public class QuizController {
     public static final int ANSWERS_MAX = 4;
-    public QuizGui ui;
+    public QuizView view;
     private boolean isAdmin = true; // TODO: zmeniť na false po dokončení
     private static final String PASSWORD = "admin";
 
-    public QuizController(QuizGui ui) {
-        this.ui = ui;
-        ui.setController(this);
+    public QuizController(QuizView view) {
+        this.view = view;
+        view.setController(this);
         boolean ok = Database.getInstance().connect();
         if (!ok){
-            ui.showConnectionError();
+            view.showConnectionError();
             System.exit(-1);
         }
        /* ArrayList <Question> questions = Database.getInstance().getQuestions();
@@ -36,10 +39,14 @@ public class QuizController {
             System.out.println(t);
         }
         //System.out.println(Database.getInstance().getQuestion(2));
+        ArrayList<Result> results = Database.getInstance().getResults();
+        for(Result r: results) {
+            System.out.println(r);
+        }
     }
     public void login(String password) {
         isAdmin = password.equals(PASSWORD);
-        ui.showLoginStatus(isAdmin);
+        view.showLoginStatus(isAdmin);
     }
     public boolean getIsAdmin() {
         return isAdmin;
@@ -48,10 +55,10 @@ public class QuizController {
         if(text.isBlank()) {
             return false;
         }
-        int questionId = Database.getInstance().addQuestion(new Question(text,category));
+        int questionId = QuestionRepository.getInstance().addQuestion(new Question(text,category));
         if (questionId == -1) return false;
         for (int i = 0; i < ANSWERS_MAX; i++) {
-            if(!answers[i].isBlank()) Database.getInstance().addAnswer(new Answer(answers[i],questionId,correct[i]));
+            if(!answers[i].isBlank()) AnswerRepository.getInstance().addAnswer(new Answer(answers[i],questionId,correct[i]));
 
 
         }
@@ -59,8 +66,8 @@ public class QuizController {
     }
 
     public void tryToShowNewTestDialog() {
-        if (isAdmin) ui.showNewTestDialog(Database.getInstance().getQuestions());
-        else ui.showNoAdmin();
+        if (isAdmin) view.showNewTestDialog(QuestionRepository.getInstance().getQuestions());
+        else view.showNoAdmin();
     }
 
     public boolean addTest(String title, ArrayList <Question> questions) {
@@ -73,15 +80,15 @@ public class QuizController {
     public void startNewTest() {
         ArrayList <Test> tests = Database.getInstance().getTests();
         if (tests.isEmpty()) {
-            ui.showNoTests();
+            view.showNoTests();
             return; // pokial mam za if return, nemusim davat else!!
-        } ui.showTests(tests);
+        } view.showTests(tests);
     }
 
     public void startTest(Test test) {
-        TestGui ui = new TestGui();
+        TestView ui = new TestView();
         new TestController(ui, test);
-        this.ui.showTestGui(ui);
+        this.view.showTestGui(ui);
     }
 }
 // TODO: zobrazovanie testov,oprava testov

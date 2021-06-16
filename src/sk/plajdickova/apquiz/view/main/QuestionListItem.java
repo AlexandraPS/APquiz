@@ -1,6 +1,6 @@
-package sk.plajdickova.apquiz.ui.main;
+package sk.plajdickova.apquiz.view.main;
 
-import sk.plajdickova.apquiz.data.Question;
+import sk.plajdickova.apquiz.data.entity.Question;
 
 public class QuestionListItem {
 

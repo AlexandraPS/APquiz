@@ -1,9 +1,9 @@
-package sk.plajdickova.apquiz.ui.main;
+package sk.plajdickova.apquiz.view.main;
 
 import sk.plajdickova.apquiz.QuizController;
-import sk.plajdickova.apquiz.data.Question;
-import sk.plajdickova.apquiz.data.Test;
-import sk.plajdickova.apquiz.ui.test.TestGui;
+import sk.plajdickova.apquiz.data.entity.Question;
+import sk.plajdickova.apquiz.data.entity.Test;
+import sk.plajdickova.apquiz.view.test.TestView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 import static sk.plajdickova.apquiz.QuizController.ANSWERS_MAX;
 
-public class QuizGui extends JFrame {
+public class QuizView extends JFrame {
     public void setController(QuizController controller) {
         this.controller = controller;
     }
@@ -23,7 +23,7 @@ public class QuizGui extends JFrame {
     private int i = 0;
 
 
-    public QuizGui() {
+    public QuizView() {
 
        /* boolean ok = Database.getInstance().connect();
         System.out.println(ok);
@@ -254,7 +254,7 @@ public class QuizGui extends JFrame {
         dialog.setVisible(true);
     }
 
-    public void showTestGui(TestGui ui) {
+    public void showTestGui(TestView ui) {
         getContentPane().removeAll();
         add(ui);
         validate();

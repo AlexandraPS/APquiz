@@ -1,10 +1,10 @@
-package sk.plajdickova.apquiz.data;
+package sk.plajdickova.apquiz.data.entity;
 
 public class Answer {
-    int id;
-    String text;
-    int questionId;
-    boolean isCorrect;
+    public int id;
+    public String text;
+    public int questionId;
+    public boolean isCorrect;
 
     public Answer() {
     }

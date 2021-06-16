@@ -1,6 +1,4 @@
-package sk.plajdickova.apquiz.ui.main;
-
-import sk.plajdickova.apquiz.ui.main.QuizGui;
+package sk.plajdickova.apquiz.view.main;
 
 import javax.swing.*;
 import java.awt.*;
