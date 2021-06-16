@@ -5,6 +5,8 @@ import sk.plajdickova.apquiz.data.entity.Test;
 import sk.plajdickova.apquiz.data.repository.Database;
 import sk.plajdickova.apquiz.view.test.TestView;
 
+import javax.swing.*;
+import java.awt.*;
 import java.sql.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +82,11 @@ public class TestController {
     private void endTest() {
         timer.cancel();
         Database.getInstance().addResult(new Result(date, time, test.id, points));
+        view.showEndDialog();
+        Container parent = view.getParent();
+        parent.removeAll();
+        parent.validate();
+        parent.repaint();
     }
 
 }

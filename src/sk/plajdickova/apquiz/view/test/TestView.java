@@ -100,5 +100,8 @@ public class TestView extends JPanel {
         buttonPause.setEnabled(isEnabled);
 
     }
+    public void showEndDialog(){
+        JOptionPane.showMessageDialog(this,"Koniec testu");
+    }
 }
 //TODO: casovac po zaklikani checkboxov(nemoznost zmeny odpovede)

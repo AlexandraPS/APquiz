@@ -3,6 +3,7 @@ package sk.plajdickova.apquiz.view.main;
 import sk.plajdickova.apquiz.QuizController;
 import sk.plajdickova.apquiz.data.entity.Question;
 import sk.plajdickova.apquiz.data.entity.Test;
+import sk.plajdickova.apquiz.view.result.ResultView;
 import sk.plajdickova.apquiz.view.test.TestView;
 
 import javax.swing.*;
@@ -75,6 +76,7 @@ public class QuizView extends JFrame {
         itemStartTest.addActionListener(e -> controller.startNewTest());
         menuStudent.add(itemStartTest);
         JMenuItem itemTestResults = new JMenuItem("Výsledky testov");
+        itemTestResults.addActionListener(e -> controller.loadResults());
         menuStudent.add(itemTestResults);
         menuBar.add(menuStudent);
         setJMenuBar(menuBar);
@@ -254,12 +256,16 @@ public class QuizView extends JFrame {
         dialog.setVisible(true);
     }
 
-    public void showTestGui(TestView ui) {
+    public void showTestView(TestView ui) {
         getContentPane().removeAll();
         add(ui);
         validate();
     }
 
 
-
+    public void showResultView(ResultView view) {
+        getContentPane().removeAll();
+        add(view);
+        validate();
+    }
 }

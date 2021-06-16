@@ -8,6 +8,8 @@ import sk.plajdickova.apquiz.data.entity.Question;
 import sk.plajdickova.apquiz.data.entity.Test;
 import sk.plajdickova.apquiz.data.repository.QuestionRepository;
 import sk.plajdickova.apquiz.view.main.QuizView;
+import sk.plajdickova.apquiz.view.result.ResultController;
+import sk.plajdickova.apquiz.view.result.ResultView;
 import sk.plajdickova.apquiz.view.test.TestView;
 
 import java.util.ArrayList;
@@ -88,7 +90,13 @@ public class QuizController {
     public void startTest(Test test) {
         TestView ui = new TestView();
         new TestController(ui, test);
-        this.view.showTestGui(ui);
+        this.view.showTestView(ui);
+    }
+
+    public void loadResults() {
+        ResultView view = new ResultView();
+        new ResultController(view);
+        this.view.showResultView(view);
     }
 }
-// TODO: zobrazovanie testov,oprava testov
+// oprava testov
